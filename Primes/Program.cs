@@ -17,14 +17,14 @@ namespace Vsite.Pood
         {
             Console.WriteLine("Prime numbers up to {0}:", maxValue);
             Console.ReadKey(true);
-            var primes = GeneratePrimeNumbers(maxValue);
-            if (primes.Length == 0)
+            var primeNumbers = GeneratePrimeNumbers(maxValue);
+            if (primeNumbers.Length == 0)
             {
                 Console.WriteLine("No primes");
             }
             else
             {
-                foreach (var number in primes)
+                foreach (var number in primeNumbers)
                 {
                     Console.WriteLine(number);
                 }
@@ -33,6 +33,10 @@ namespace Vsite.Pood
             //Console.ReadLine();
         }
 
+        private static int s;
+        private static bool[] f;
+        private static int[] primes;
+
         // From the book "Agile Principles, Patterns and Practices in C#", by Robert C. Martin
         public static int[] GeneratePrimeNumbers(int maxValue)
         {
@@ -40,46 +44,60 @@ namespace Vsite.Pood
             {
                 return new int[0];
             }
-            // declarations
-            int s = maxValue + 1; // size of array
-            bool[] f = new bool[s]; // flags for prime numbers
-            int i;
 
-            // initialize array to true
-            for (i = 0; i < s; ++i)
-                f[i] = true;
+            GenerateSieve(maxValue);
 
-            // get rid of known non-primes 0 and 1
-            f[0] = f[1] = false;
+            Sieve();
 
-            // sieve up to square root of maxValue 
-            int j;
-            for (i = 2; i < Math.Sqrt(s) + 1; ++i)
-            {
-                if (f[i]) // if i is uncrossed, cross its multiples (multiples are not primes)
-                {
-                    for (j = 2 * i; j < s; j += i)
-                        f[j] = false; // multiple is not a prime
-                }
-            }
+            ColectPrimes();
 
-            // how many primes?
+            return primes; // return the primes
+        }
+
+        private static void ColectPrimes()
+        {
             int count = 0;
-            for (i = 0; i < s; ++i)
+            for (int i = 0; i < s; ++i)
             {
                 if (f[i])
                     ++count;
             }
 
-            int[] primes = new int[count];
+            primes = new int[count];
 
             // move primes into the result
-            for (i = 0, j = 0; i < s; ++i)
+            for (int i = 0, j = 0; i < s; ++i)
             {
                 if (f[i])
                     primes[j++] = i;
             }
-            return primes; // return the primes
+        }
+
+        private static void Sieve()
+        {
+            for (int i = 2; i < Math.Sqrt(s) + 1; ++i)
+            {
+                if (f[i]) // if i is uncrossed, cross its multiples (multiples are not primes)
+                {
+                    for (int j = 2 * i; j < s; j += i)
+                        f[j] = false; // multiple is not a prime
+                }
+            }
+        }
+
+        private static void GenerateSieve(int maxValue)
+        {
+            // size of array
+            s = maxValue + 1;
+            // flags for prime numbers
+            f = new bool[s];
+
+            // initialize array to true
+            for (int i = 0; i < s; ++i)
+                f[i] = true;
+
+            // get rid of known non-primes 0 and 1
+            f[0] = f[1] = false;
         }
     }
 }
