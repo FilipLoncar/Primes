@@ -54,46 +54,6 @@ namespace Vsite.Pood
             return primes; // return the primes
         }
 
-        private static void CollectUnCrossedIntegers()
-        {
-            int count = 0;
-            for (int i = 2; i < crossed.Length; ++i)
-            {
-                if (!crossed[i])
-                {
-                    ++count;
-                }
-                    
-            }
-
-            primes = new int[count];
-
-            // move primes into the result
-            for (int i = 2, j = 0; i < crossed.Length; ++i)
-            {
-                if (!crossed[i])
-                {
-                    primes[j++] = i;
-                }
-                    
-            }
-        }
-
-        private static void CrossOutMultiples()
-        {
-            for (int i = 2; i < Math.Sqrt(crossed.Length) + 1; ++i)
-            {
-                if (!crossed[i]) // if i is uncrossed, cross its multiples (multiples are not primes)
-                {
-                    for (int j = 2 * i; j < crossed.Length; j += i)
-                    {
-                        crossed[j] = true; // multiple is not a prime
-                    }
-                        
-                }
-            }
-        }
-
         private static void GenerateArryOfFlags(int maxValue)
         {
             // size of array
@@ -105,10 +65,56 @@ namespace Vsite.Pood
             for (int i = 2; i < crossed.Length; ++i)
             {
                 crossed[i] = false;
-            }  
+            }
 
             // get rid of known non-primes 0 and 1
             //f[0] = f[1] = false;
         }
+
+        private static void CrossOutMultiples()
+        {
+            for (int i = 2; i < Math.Sqrt(crossed.Length) + 1; ++i)
+            {
+                if (NotCrossed(i)) // if i is uncrossed, cross its multiples (multiples are not primes)
+                {
+                    for (int j = 2 * i; j < crossed.Length; j += i)
+                    {
+                        crossed[j] = true; // multiple is not a prime
+                    }
+
+                }
+            }
+        }
+
+        private static bool NotCrossed(int i)
+        {
+            return !crossed[i];
+        }
+
+        private static void CollectUnCrossedIntegers()
+        {
+            int count = 0;
+            for (int i = 2; i < crossed.Length; ++i)
+            {
+                if (NotCrossed(i))
+                {
+                    ++count;
+                }
+                    
+            }
+
+            primes = new int[count];
+
+            // move primes into the result
+            for (int i = 2, j = 0; i < crossed.Length; ++i)
+            {
+                if (NotCrossed(i))
+                {
+                    primes[j++] = i;
+                }
+                    
+            }
+        }
+
     }
 }
