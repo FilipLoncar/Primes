@@ -57,7 +57,7 @@ namespace Vsite.Pood
         private static void CollectUnCrossedIntegers()
         {
             int count = 0;
-            for (int i = 0; i < f.Length; ++i)
+            for (int i = 2; i < f.Length; ++i)
             {
                 if (f[i])
                 {
@@ -69,7 +69,7 @@ namespace Vsite.Pood
             primes = new int[count];
 
             // move primes into the result
-            for (int i = 0, j = 0; i < f.Length; ++i)
+            for (int i = 2, j = 0; i < f.Length; ++i)
             {
                 if (f[i])
                 {
@@ -102,13 +102,13 @@ namespace Vsite.Pood
             f = new bool[++maxValue];
 
             // initialize array to true
-            for (int i = 0; i < f.Length; ++i)
+            for (int i = 2; i < f.Length; ++i)
             {
                 f[i] = true;
             }  
 
             // get rid of known non-primes 0 and 1
-            f[0] = f[1] = false;
+            //f[0] = f[1] = false;
         }
     }
 }
