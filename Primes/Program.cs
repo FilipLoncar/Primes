@@ -34,8 +34,8 @@ namespace Vsite.Pood
         }
 
         //private static int s;
-        private static bool[] crossed;
-        private static int[] primes;
+        //private static bool[] crossed;
+        //private static int[] primes;
 
         // From the book "Agile Principles, Patterns and Practices in C#", by Robert C. Martin
         public static int[] GeneratePrimeNumbers(int maxValue)
@@ -45,21 +45,21 @@ namespace Vsite.Pood
                 return new int[0];
             }
 
-            GenerateArryOfFlags(maxValue);
+            var flags = GenerateArryOfFlags(maxValue);
 
-            CrossOutMultiples();
+            CrossOutMultiples(flags);
 
-            CollectUnCrossedIntegers();
+            return CollectUnCrossedIntegers(flags);
 
-            return primes; // return the primes
+            //return primes; // return the primes
         }
 
-        private static void GenerateArryOfFlags(int maxValue)
+        private static bool[] GenerateArryOfFlags(int maxValue)
         {
             // size of array
             //s = maxValue + 1;
             // flags for prime numbers
-            crossed = new bool[++maxValue];
+            var crossed = new bool[++maxValue];
 
             // initialize array to true
             for (int i = 2; i < crossed.Length; ++i)
@@ -69,32 +69,34 @@ namespace Vsite.Pood
 
             // get rid of known non-primes 0 and 1
             //f[0] = f[1] = false;
+
+            return crossed;
         }
 
-        private static void CrossOutMultiples()
+        private static void CrossOutMultiples(bool[] crossed)
         {
-            for (int i = 2; i < CalcLargestCommonFactor(); ++i)
+            for (int i = 2; i < CalcLargestCommonFactor(crossed.Length); ++i)
             {
-                if (NotCrossed(i)) // if i is uncrossed, cross its multiples (multiples are not primes)
+                if (NotCrossed(crossed,i)) // if i is uncrossed, cross its multiples (multiples are not primes)
                 {
-                    CrossOutMultiplesOf(i);
+                    CrossOutMultiplesOf(crossed,i);
 
                 }
             }
         }
 
-        private static int CalcLargestCommonFactor() {
+        private static int CalcLargestCommonFactor( int i) {
 
-            var commonFactor = Math.Sqrt(crossed.Length) + 1;
+            var commonFactor = Math.Sqrt(i) + 1;
             return (int)commonFactor;
         }
 
-        private static bool NotCrossed(int i)
+        private static bool NotCrossed(bool[] crossed, int i)
         {
             return !crossed[i];
         }
 
-        private static void CrossOutMultiplesOf(int i)
+        private static void CrossOutMultiplesOf(bool[] crossed, int i)
         {
             for (int j = 2 * i; j < crossed.Length; j += i)
             {
@@ -102,36 +104,37 @@ namespace Vsite.Pood
             }
         }
 
-        private static void CollectUnCrossedIntegers()
+        private static int[] CollectUnCrossedIntegers(bool[] crossed)
         {
-            int count = GetNumberOfUncrossed();
+           // int count = GetNumberOfUncrossed();
 
-            primes = new int[count];
+            var primes = new List<int>(); // int[count];
 
             // move primes into the result
-            for (int i = 2, j = 0; i < crossed.Length; ++i)
-            {
-                if (NotCrossed(i))
-                {
-                    primes[j++] = i;
-                }
-
-            }
-        }
-
-        private static int GetNumberOfUncrossed()
-        {
-            int count = 0;
             for (int i = 2; i < crossed.Length; ++i)
             {
-                if (NotCrossed(i))
+                if (NotCrossed(crossed,i))
                 {
-                    ++count;
+                    primes.Add(i);// [j++] = i;
                 }
 
             }
-
-            return count;
+            return primes.ToArray<int>();
         }
+
+        //private static int GetNumberOfUncrossed()
+        //{
+        //    int count = 0;
+        //    for (int i = 2; i < crossed.Length; ++i)
+        //    {
+        //        if (NotCrossed(i))
+        //        {
+        //            ++count;
+        //        }
+
+        //    }
+
+        //    return count;
+        //}
     }
 }
